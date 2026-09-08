@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name" translatable="false">Foroom</string>
+
+    // shared
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_repeat_password">Repeat Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
+    <string name="confirm">Confirm</string>
+    <string name="username_size_error">Username too short</string>
+
+    // registration
+    <string name="registration_log_in">Or if you already have an account, [Log In]</string>
+
+    // validation
+    <string name="blank_input_error">Blank Input is not Permitted</string>
+    <string name="blank_avatar_id_error">Please Choose Avatar</string>
+    <string name="password_does_not_match_error">Passwords do not Match</string>
+
+    // chats
+    <string name="chats_search_hint">Search For Chat</string>
+    <string name="chats_filter_popular">Popular Chats</string>
+    <string name="chats_filter_created">Created Chats</string>
+    <string name="chats_filter_favourite">Favourite Chats</string>
+
+    // create chat
+    <string name="create_chat_title">Create New Chat</string>
+    <string name="create_chat_chat_name">Chat Name</string>
+    <string name="create_chat">Create Chat</string>
+
+    // profile
+    <string name="profile_created_chats">Created Chats</string>
+    <string name="profile_favourite_chats">Favourite Chats</string>
+    <string name="profile_change_username">Change Username</string>
+    <string name="profile_change_password">Change Password</string>
+    <string name="profile_change_language">Change Language</string>
+    <string name="profile_sign_out">Sign Out</string>
+
+    <string name="profile_change_language_georgian">Georgian</string>
+    <string name="profile_change_language_english">English</string>
+
+    // action sheets
+    <string name="change_username_new_username">New Username</string>
+    <string name="change_password_new_password">New Password</string>
+
+    // chat
+    <string name="error_could_not_connect_to_chat">Could not connect to the chat, please check network connection.</string>
+</resources>

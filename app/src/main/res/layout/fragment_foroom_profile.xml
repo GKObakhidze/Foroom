@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/foroom_background_primary">
+
+    <com.example.design_system.components.image_view.CircleImageView
+        android:id="@+id/userImageView"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="4dp"
+        android:elevation="2dp"
+        android:src="@drawable/ic_edit"
+        android:scaleType="centerCrop"
+        android:padding="4dp"
+        android:background="@drawable/background_stroke_2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/userImageView"
+        app:layout_constraintEnd_toEndOf="@+id/userImageView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textAppearance="@style/jostTitleRegular"
+        app:layout_constraintTop_toBottomOf="@+id/userImageView" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/background_rounded_16dp"
+        android:backgroundTint="@color/foroom_layer_background"
+        app:layout_constraintTop_toBottomOf="@id/userNameTextView"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="16dp">
+
+        <com.example.design_system.components.list.ForoomListItem
+            android:id="@+id/createdChatsItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/profile_created_chats"
+            app:imageEnd="@drawable/ic_chevron_right"
+            app:imageStart="@drawable/ic_chat_history"
+            app:hasBottomDivider="true"
+            android:paddingBottom="16dp"/>
+
+        <com.example.design_system.components.list.ForoomListItem
+            android:id="@+id/favoriteChatsItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/profile_favourite_chats"
+            app:imageEnd="@drawable/ic_chevron_right"
+            app:imageStart="@drawable/ic_star"
+            app:hasBottomDivider="true"
+            android:paddingVertical="16dp"/>
+
+        <com.example.design_system.components.list.ForoomListItem
+            android:id="@+id/changeUsernameItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/profile_change_username"
+            app:imageEnd="@drawable/ic_chevron_right"
+            app:imageStart="@drawable/ic_edit_user"
+            app:hasBottomDivider="true"
+            android:paddingVertical="16dp"/>
+
+        <com.example.design_system.components.list.ForoomListItem
+            android:id="@+id/changePasswordItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/profile_change_password"
+            app:imageEnd="@drawable/ic_chevron_right"
+            app:imageStart="@drawable/ic_lock"
+            app:hasBottomDivider="true"
+            android:paddingVertical="16dp"/>
+
+        <com.example.design_system.components.list.ForoomListItem
+            android:id="@+id/changeLanguageItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:imageEnd="@drawable/ic_chevron_right"
+            app:imageStart="@drawable/ic_language"
+            android:paddingVertical="16dp"
+            app:hasBottomDivider="true"
+            app:title="@string/profile_change_language"/>
+
+        <com.example.design_system.components.list.ForoomListItem
+            android:id="@+id/signOutItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/profile_sign_out"
+            app:imageEnd="@drawable/ic_chevron_right"
+            app:imageStart="@drawable/ic_sign_out"
+            android:paddingTop="16dp"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
