@@ -4,7 +4,6 @@ package com.example.foroom.pages
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.PerformException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
@@ -13,7 +12,9 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.alternator.foroom.R
+import com.example.design_system.R as DesignSystemR
 import com.example.design_system.components.image_chooser.ImageChooserItemView
+import com.example.design_system.components.image_chooser.ImageChooserListView
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -23,17 +24,17 @@ import java.util.concurrent.TimeoutException
 class RegistrationPage {
 
     private val usernameField = allOf(
-        withId(com.example.design_system.R.id.inputEditText),
+        withId(DesignSystemR.id.inputEditText),
         isDescendantOfA(withId(R.id.userNameInput))
     )
 
     private val passwordField = allOf(
-        withId(com.example.design_system.R.id.inputEditText),
+        withId(DesignSystemR.id.inputEditText),
         isDescendantOfA(withId(R.id.passwordInput))
     )
 
     private val repeatPasswordField = allOf(
-        withId(com.example.design_system.R.id.inputEditText),
+        withId(DesignSystemR.id.inputEditText),
         isDescendantOfA(withId(R.id.repeatPasswordInput))
     )
 
@@ -57,47 +58,95 @@ class RegistrationPage {
             .perform(replaceText(password), closeSoftKeyboard())
     }
 
-    private fun secondAvatarMatcher(): Matcher<View> = allOf(
-        isAssignableFrom(ImageChooserItemView::class.java),
-        isDescendantOfA(withId(R.id.listView)),
-        object : TypeSafeMatcher<View>() {
+    private fun avatarChooserReadyMatcher(): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
 
             override fun describeTo(description: Description) {
                 description.appendText(
-                    "second avatar in the avatar list"
+                    "avatar chooser with at least two images and enabled selection"
                 )
             }
 
             override fun matchesSafely(view: View): Boolean {
-                val parent = view.parent as? View ?: return false
-
-                val avatarItems = mutableListOf<View>()
-
-                fun collectAvatars(container: View) {
-                    if (container is ImageChooserItemView) {
-                        avatarItems.add(container)
-                    } else if (container is android.view.ViewGroup) {
-                        for (index in 0 until container.childCount) {
-                            collectAvatars(container.getChildAt(index))
-                        }
-                    }
-                }
-
-                val list = generateSequence(parent) {
-                    it.parent as? View
-                }.firstOrNull { it.id == R.id.listView }
+                val chooser = view as? ImageChooserListView
                     ?: return false
 
-                collectAvatars(list)
-
-                return avatarItems.getOrNull(1) === view
+                return chooser.id == R.id.listView &&
+                        chooser.isChoosingEnabled &&
+                        chooser.images.size >= 2
             }
         }
-    )
+    }
+
+    private fun secondAvatarMatcher(): Matcher<View> {
+        return allOf(
+            isAssignableFrom(ImageChooserItemView::class.java),
+            isDescendantOfA(withId(R.id.listView)),
+            object : TypeSafeMatcher<View>() {
+
+                override fun describeTo(description: Description) {
+                    description.appendText(
+                        "second avatar in the avatar list"
+                    )
+                }
+
+                override fun matchesSafely(view: View): Boolean {
+                    val list = generateSequence(view.parent) {
+                        it.parent
+                    }
+                        .filterIsInstance<View>()
+                        .firstOrNull { it.id == R.id.listView }
+                            as? ImageChooserListView
+                        ?: return false
+
+                    val avatarItems = mutableListOf<View>()
+
+                    fun collectAvatars(container: View) {
+                        if (container is ImageChooserItemView) {
+                            avatarItems.add(container)
+                        } else if (container is android.view.ViewGroup) {
+                            for (index in 0 until container.childCount) {
+                                collectAvatars(
+                                    container.getChildAt(index)
+                                )
+                            }
+                        }
+                    }
+
+                    collectAvatars(list)
+
+                    return avatarItems.getOrNull(1) === view
+                }
+            }
+        )
+    }
 
     fun selectAvatar() {
+        // Wait until avatar selection becomes available.
+        waitForView(avatarChooserReadyMatcher())
+
+        // Select the second avatar.
         waitForView(secondAvatarMatcher())
             .perform(click())
+
+        // Verify that the second avatar is selected.
+        onView(withId(R.id.listView)).check(
+            matches(object : TypeSafeMatcher<View>() {
+
+                override fun describeTo(description: Description) {
+                    description.appendText(
+                        "second avatar is selected"
+                    )
+                }
+
+                override fun matchesSafely(view: View): Boolean {
+                    val chooser = view as? ImageChooserListView
+                        ?: return false
+
+                    return chooser.selectedIndex == 1
+                }
+            })
+        )
     }
 
     fun clickSignUp() {
@@ -130,13 +179,12 @@ class RegistrationPage {
                 return interaction
 
             } catch (_: NoMatchingViewException) {
-                // The view has not appeared yet.
+                // The view is not available yet.
             } catch (_: AssertionError) {
-                // The view exists but is not displayed yet.
+                // The view is not ready yet.
             }
 
             instrumentation.waitForIdleSync()
-
             Thread.sleep(250)
         }
 

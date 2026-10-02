@@ -25,8 +25,4 @@ class LoginSteps {
         loginPage.verifyUsernameError()
         loginPage.verifyPasswordError()
     }
-
-    fun openRegistrationScreen() {
-        loginPage.clickSignUp()
-    }
 }
