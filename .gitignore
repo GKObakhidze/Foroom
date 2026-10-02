@@ -14,3 +14,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Local IDE and Kotlin caches
+.kotlin/
+/.idea/androidTestResultsUserPreferences.xml
+/.idea/codeStyles/
+/.idea/deviceManager.xml

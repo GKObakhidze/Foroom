@@ -19,6 +19,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            if (providers.gradleProperty("foroomTraining").orElse("true").get().toBoolean()) {
+                applicationIdSuffix = ".training"
+                resValue("string", "app_name", "Foroom Training")
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(

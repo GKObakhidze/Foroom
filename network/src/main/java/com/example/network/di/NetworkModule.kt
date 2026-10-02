@@ -6,6 +6,8 @@ import com.example.shared.util.runtime.user_token.UserTokenRuntimeHolder
 import com.example.network.web_socket.ForoomWebSocketClient
 import com.example.network.web_socket.ForoomWebSocketClientImpl
 import com.example.shared.util.runtime.user_language.UserLanguageRuntimeHolder
+import com.example.network.training.TrainingInterceptor
+import org.koin.android.ext.koin.androidContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
@@ -29,6 +31,9 @@ val networkModule = module {
                 .build()
 
             chain.proceed(newRequest)
+        }
+        if (BuildConfig.TRAINING_MODE) {
+            newClientBuilder.addInterceptor(TrainingInterceptor(androidContext()))
         }
         newClientBuilder.addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY

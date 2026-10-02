@@ -20,10 +20,12 @@ android {
 
     buildTypes {
         debug {
+            buildConfigField("boolean", "TRAINING_MODE", providers.gradleProperty("foroomTraining").orElse("true").get().toBoolean().toString())
             buildConfigField("String", "BASE_URL", "\"https://foroom.alternator.cc/\"")
         }
 
         release {
+            buildConfigField("boolean", "TRAINING_MODE", "false")
             buildConfigField("String", "BASE_URL", "\"https://foroom.alternator.cc/\"")
             
             isMinifyEnabled = false

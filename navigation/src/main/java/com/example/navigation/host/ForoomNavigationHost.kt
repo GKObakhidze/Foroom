@@ -36,7 +36,8 @@ fun ForoomNavigationHost.openNextPage(
         transaction.addToBackStack(null)
     }
 
-    transaction.add(
+    // Replace the visible screen; the back stack restores it when navigating back.
+    transaction.replace(
         fragmentContainerId,
         fragment
     )
