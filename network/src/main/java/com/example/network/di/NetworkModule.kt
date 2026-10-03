@@ -7,6 +7,7 @@ import com.example.network.web_socket.ForoomWebSocketClient
 import com.example.network.web_socket.ForoomWebSocketClientImpl
 import com.example.shared.util.runtime.user_language.UserLanguageRuntimeHolder
 import com.example.network.training.TrainingInterceptor
+import com.example.network.training.TrainingChatClient
 import org.koin.android.ext.koin.androidContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,6 +48,7 @@ val networkModule = module {
     }
 
     factory<ForoomWebSocketClient>(named(ForoomWebSocketClientImpl.ForoomHub.CHAT)) {
-        ForoomWebSocketClientImpl(ForoomWebSocketClientImpl.ForoomHub.CHAT)
+        if (BuildConfig.TRAINING_MODE) TrainingChatClient()
+        else ForoomWebSocketClientImpl(ForoomWebSocketClientImpl.ForoomHub.CHAT)
     }
 }
