@@ -13,12 +13,13 @@ import java.security.MessageDigest
 import java.util.UUID
 
 /** Local exercise backend. Never forwards a request to the production server. */
-class TrainingInterceptor(context: Context) : Interceptor {
-    private val preferences = context.getSharedPreferences("foroom_training", Context.MODE_PRIVATE)
-    private val packageName = context.packageName
+class TrainingInterceptor(private val store: TrainingStore) : Interceptor {
+    constructor(context: Context) : this(TrainingStore(context))
 
-    @Synchronized
-    override fun intercept(chain: Interceptor.Chain): Response {
+    private val preferences = store.preferences
+    private val packageName = store.packageName
+
+    override fun intercept(chain: Interceptor.Chain): Response = synchronized(store) {
         val request = chain.request()
         val users = JSONObject(preferences.getString("users", "{}")!!)
         if (!users.has("student")) {
@@ -141,14 +142,19 @@ class TrainingInterceptor(context: Context) : Interceptor {
                 if (readChats().none { it.getInt("id") == chatId }) {
                     status = 404
                     JSONObject().put("message", "Chat does not exist")
-                } else JSONObject().put("result", JSONArray()).put("hasNext", false)
+                } else {
+                    val page = request.url.queryParameter("page")?.toIntOrNull()?.coerceAtLeast(0) ?: 0
+                    val limit = request.url.queryParameter("limit")?.toIntOrNull()?.coerceIn(1, 100) ?: 20
+                    val beforeId = request.url.queryParameter("beforeId")?.toIntOrNull()
+                    store.history(requireNotNull(chatId), page, limit, beforeId)
+                }
             }
             else -> {
                 status = 501
                 JSONObject().put("message", "This feature is not available in training mode")
             }
         }
-        return Response.Builder().request(request).protocol(Protocol.HTTP_1_1)
+        Response.Builder().request(request).protocol(Protocol.HTTP_1_1)
             .code(status).message(if (status == 200) "OK" else "Training request failed")
             .body(result.toString().toResponseBody("application/json".toMediaType())).build()
     }
