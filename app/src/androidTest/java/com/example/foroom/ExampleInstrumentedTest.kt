@@ -2,7 +2,7 @@ package com.example.foroom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.network.BuildConfig
+import com.alternator.foroom.BuildConfig
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
